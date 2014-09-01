@@ -1,0 +1,59 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <context:component-scan base-package="com.optima.avaya"/>
+
+
+    <context:property-placeholder location="classpath:/connection-DEV.properties"  order="1" local-override="true"/>
+
+    <context:annotation-config />
+
+    <mvc:resources mapping="/resources/**" location="/resources/avaya/" />
+
+    <mvc:annotation-driven />
+
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/pages/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+
+    <!-- Datasources -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="user" value="${dataSource.user}" />
+        <property name="password" value="${dataSource.password}" />
+        <property name="driverClass" value="${dataSource.driverClass}" />
+        <property name="jdbcUrl" value="${dataSource.jdbcUrl}" />
+        <property name="initialPoolSize" value="${dataSource.initialPoolSize}" />
+        <property name="maxPoolSize" value="${dataSource.maxPoolSize}" />
+        <property name="minPoolSize" value="${dataSource.minPoolSize}" />
+        <property name="acquireIncrement" value="${dataSource.acquireIncrement}" />
+        <property name="acquireRetryAttempts" value="${dataSource.acquireRetryAttempts}" />
+    </bean>
+
+
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="smtp.optimaitalia.com" />
+        <property name="port" value="25" />
+
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">false</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+            </props>
+        </property>
+    </bean>
+
+
+</beans>
